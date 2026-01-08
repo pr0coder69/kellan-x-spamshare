@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam Share</title>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/9M7hdir.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Exo 2', sans-serif;
+        }
+        .cyberpunk-border {
+            border: 1px solid transparent;
+            background: linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+                        linear-gradient(135deg, #00f3ff, #ff00c8, #00ff9d) border-box;
+        }
+        .cyberpunk-bg {
+            background: linear-gradient(135deg, rgba(0, 10, 20, 0.95), rgba(20, 0, 40, 0.95));
+        }
+        .cyberpunk-text {
+            background: linear-gradient(90deg, #00f3ff, #ff00c8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .cyberpunk-text-secondary {
+            background: linear-gradient(90deg, #00ff9d, #00c8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .glow {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5),
+                        0 0 30px rgba(255, 0, 200, 0.3);
+        }
+        .glow-green {
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.5),
+                        0 0 30px rgba(0, 200, 255, 0.3);
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 243, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+        }
+        .matrix-bg {
+            background-color: #000;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 40, 60, 0.3) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(60, 0, 40, 0.3) 0%, transparent 20%);
+        }
+        
+        /* Hide images from external results */
+        #history-container img,
+        #processing img,
+        .result-image {
+            display: none !important;
+        }
+        
+        /* Ensure no images show in history */
+        .history-item img {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="matrix-bg min-h-screen text-gray-300 p-4 md:p-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <div class="flex justify-center items-center mb-2">
+                <!-- Hidden favicon in header -->
+                <div style="display: none;">
+                    <img src="https://i.imgur.com/9M7hdir.png" alt="Spam Share Icon">
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold cyberpunk-text">
+                    SPAM SHARE
+                </h1>
+            </div>
+            <p class="text-lg cyberpunk-text-secondary mb-1">AUTOMATED FACEBOOK SHARE BOOSTER</p>
+            <p class="text-sm text-gray-400">Developer: Kellan Kaya</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Main Form Section -->
+            <div class="lg:col-span-2">
+                <div class="cyberpunk-border rounded-xl p-6 cyberpunk-bg mb-6">
+                    <h2 class="text-2xl font-bold cyberpunk-text mb-4">
+                        <i class="fas fa-cogs mr-2"></i>SHARE SETTINGS
+                    </h2>
+                    <form onsubmit="submitForm(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1 cyberpunk-text">
+                                    <i class="fas fa-user mr-1"></i> USERNAME:
+                                </label>
+                                <input type="text" id="username" name="username" placeholder="Enter your username"
+                                    class="w-full bg-black border border-gray-800 text-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1 cyberpunk-text">
+                                    <i class="fas fa-cookie-bite mr-1"></i> APPSTATE:
+                                </label>
+                                <input type="text" id="cookies" name="cookie" placeholder="Paste your appstate here"
+                                    class="w-full bg-black border border-gray-800 text-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1 cyberpunk-text">
+                                    <i class="fas fa-link mr-1"></i> POST LINK:
+                                </label>
+                                <input type="text" id="urls" name="url" placeholder="Facebook post URL"
+                                    class="w-full bg-black border border-gray-800 text-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1 cyberpunk-text">
+                                    <i class="fas fa-bullseye mr-1"></i> LIMIT:
+                                </label>
+                                <input type="number" id="amounts" name="amount" placeholder="Number of shares"
+                                    class="w-full bg-black border border-gray-800 text-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-1 cyberpunk-text">
+                                    <i class="fas fa-clock mr-1"></i> DELAY (seconds):
+                                </label>
+                                <input type="number" id="intervals" name="interval" placeholder="Delay between shares"
+                                    class="w-full bg-black border border-gray-800 text-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <button type="submit" id="submit-button"
+                                class="w-full cyberpunk-border bg-black hover:bg-gray-900 text-white font-bold py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 glow">
+                                <i class="fas fa-rocket mr-2"></i> START SHARE SPAM
+                            </button>
+                        </div>
+                        <div id="result" class="hidden mt-4 p-4 rounded-lg text-center"></div>
+                    </form>
+                </div>
+
+                <!-- Share History Section -->
+                <div class="cyberpunk-border rounded-xl p-6 cyberpunk-bg">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold cyberpunk-text">
+                            <i class="fas fa-history mr-2"></i>SHARE HISTORY
+                        </h2>
+                        <button onclick="clearHistory()"
+                            class="cyberpunk-border bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-lg transition duration-300 text-sm">
+                            <i class="fas fa-trash mr-1"></i> CLEAR HISTORY
+                        </button>
+                    </div>
+                    <div id="history-container" class="space-y-3 max-h-96 overflow-y-auto p-2">
+                        <!-- History items will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Processing Section -->
+            <div class="lg:col-span-1">
+                <div class="cyberpunk-border rounded-xl p-6 cyberpunk-bg h-full">
+                    <h2 class="text-2xl font-bold cyberpunk-text mb-4">
+                        <i class="fas fa-sync-alt mr-2 pulse"></i>ACTIVE PROCESSES
+                    </h2>
+                    <div id="processing" class="space-y-4">
+                        <!-- Processing items will be added here -->
+                    </div>
+                    <div id="no-processes" class="text-center text-gray-500 mt-8">
+                        <i class="fas fa-tasks text-4xl mb-4"></i>
+                        <p>No active processes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-gray-500 text-sm cyberpunk-border rounded-xl p-4 cyberpunk-bg">
+            <!-- Hidden icon in footer -->
+            <div style="display: none;">
+                <img src="https://i.imgur.com/9M7hdir.png" alt="Spam Share Icon">
+            </div>
+            <p class="cyberpunk-text font-bold">SPAM SHARE 2026 © ALL RIGHTS RESERVED</p>
+            <p class="mt-1">Developed with <i class="fas fa-heart text-red-500"></i> by Kellan Kaya</p>
+        </footer>
+
+        <!-- Access Key Modals -->
+        <div id="clearHistoryModal" class="fixed inset-0 bg-black bg-opacity-80 hidden flex items-center justify-center z-50">
+            <div class="cyberpunk-border rounded-xl p-6 cyberpunk-bg w-full max-w-md mx-4">
+                <h3 class="text-xl font-bold cyberpunk-text mb-4">
+                    <i class="fas fa-key mr-2"></i> ACCESS KEY REQUIRED
+                </h3>
+                <input type="password" id="clearHistoryKey" placeholder="Enter access key"
+                    class="w-full bg-black border border-gray-800 text-gray-300 rounded-lg px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <div class="flex justify-end space-x-3">
+                    <button onclick="document.getElementById('clearHistoryModal').classList.add('hidden')"
+                        class="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition">
+                        Cancel
+                    </button>
+                    <button onclick="confirmClearHistory()"
+                        class="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700 transition">
+                        Confirm Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="stopProcessModal" class="fixed inset-0 bg-black bg-opacity-80 hidden flex items-center justify-center z-50">
+            <div class="cyberpunk-border rounded-xl p-6 cyberpunk-bg w-full max-w-md mx-4">
+                <h3 class="text-xl font-bold cyberpunk-text mb-4">
+                    <i class="fas fa-stop-circle mr-2"></i> STOP PROCESS
+                </h3>
+                <input type="password" id="stopProcessKey" placeholder="Enter access key"
+                    class="w-full bg-black border border-gray-800 text-gray-300 rounded-lg px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <div class="flex justify-end space-x-3">
+                    <button onclick="document.getElementById('stopProcessModal').classList.add('hidden')"
+                        class="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition">
+                        Cancel
+                    </button>
+                    <button onclick="confirmStopProcess()"
+                        class="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700 transition">
+                        Stop Process
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize history from localStorage
+        let shareHistory = JSON.parse(localStorage.getItem('shareHistory')) || [];
+        const ACCESS_KEYS = {
+            clearHistory: "shareddd",
+            stopProcess: "stopnow"
+        };
+
+        // Store original URLs for each process
+        const originalUrls = {};
+
+        // Sanitize text to remove any image tags
+        function sanitizeText(text) {
+            if (!text) return '';
+            return text.replace(/<img[^>]*>/g, '')
+                       .replace(/\[img\][^\[]*\[\/img\]/g, '')
+                       .replace(/!\[.*?\]\(.*?\)/g, '');
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ', ' + date.toLocaleTimeString();
+        }
+
+        // Render history on load
+        function renderHistory() {
+            const container = document.getElementById('history-container');
+            if (shareHistory.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">No history yet</p>';
+                return;
+            }
+
+            container.innerHTML = shareHistory.map((item) => {
+                return `
+                <div class="cyberpunk-border rounded-lg p-4 bg-black bg-opacity-50 history-item mb-3">
+                    <div class="space-y-2">
+                        <p class="text-lg font-bold cyberpunk-text-secondary">
+                            <i class="fas fa-user mr-2"></i>${item.username || 'Unknown User'}
+                        </p>
+                        <p class="text-sm text-gray-300 break-all">
+                            <i class="fas fa-link mr-2"></i>
+                            <a href="${item.url}" target="_blank" class="hover:text-cyan-400 transition">
+                                ${item.url}
+                            </a>
+                        </p>
+                        <p class="text-xs text-gray-400">
+                            <i class="fas fa-share-alt mr-1"></i>Shares: ${item.count}/${item.target} | ${formatDate(item.timestamp)}
+                        </p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-xs ${item.completed ? 'text-green-500' : 'text-yellow-500'} font-bold">
+                                ${item.completed ? '✅ COMPLETED' : '⏸️ STOPPED'}
+                            </span>
+                            <button onclick="viewPost('${item.url}')" class="text-xs cyberpunk-border bg-black hover:bg-gray-900 px-3 py-1 rounded transition">
+                                <i class="fas fa-eye mr-1"></i>View Post
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            
+            // Double-check to hide any images that might have slipped through
+            const images = container.querySelectorAll('img');
+            images.forEach(img => img.style.display = 'none');
+        }
+
+        // View post function
+        function viewPost(url) {
+            window.open(url, '_blank');
+        }
+
+        // Clear history with access key
+        function clearHistory() {
+            document.getElementById('clearHistoryModal').classList.remove('hidden');
+        }
+
+        function confirmClearHistory() {
+            const key = document.getElementById('clearHistoryKey').value;
+            if (key === ACCESS_KEYS.clearHistory) {
+                shareHistory = [];
+                localStorage.setItem('shareHistory', JSON.stringify(shareHistory));
+                renderHistory();
+                document.getElementById('clearHistoryModal').classList.add('hidden');
+                document.getElementById('clearHistoryKey').value = '';
+                showMessage('History cleared successfully', 'success');
+            } else {
+                showMessage('Invalid access key', 'error');
+            }
+        }
+
+        // Show stop process modal
+        function showStopProcessModal(sessionId, originalUrl) {
+            document.getElementById('stopProcessModal').dataset.session = sessionId;
+            document.getElementById('stopProcessModal').dataset.url = originalUrl;
+            document.getElementById('stopProcessModal').classList.remove('hidden');
+        }
+
+        function confirmStopProcess() {
+            const key = document.getElementById('stopProcessKey').value;
+            const sessionId = document.getElementById('stopProcessModal').dataset.session;
+            const originalUrl = document.getElementById('stopProcessModal').dataset.url;
+            
+            if (key === ACCESS_KEYS.stopProcess) {
+                // Send stop request to backend
+                fetch(`/api/stop/${sessionId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 200) {
+                            showMessage('Process stopped successfully', 'success');
+                            // Add to history
+                            const username = document.getElementById('username').value || 'Unknown User';
+                            addToHistory(sessionId, 'stopped', originalUrl, username);
+                        } else {
+                            showMessage('Error stopping process', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showMessage('Error stopping process', 'error');
+                    });
+                
+                document.getElementById('stopProcessModal').classList.add('hidden');
+                document.getElementById('stopProcessKey').value = '';
+            } else {
+                showMessage('Invalid access key', 'error');
+            }
+        }
+
+        // Add completed/stopped process to history
+        function addToHistory(sessionId, status, url, username) {
+            const historyItem = {
+                id: sessionId,
+                url: url,
+                username: username,
+                count: total.has(sessionId) ? total.get(sessionId).count : 0,
+                target: total.has(sessionId) ? total.get(sessionId).target : 0,
+                timestamp: new Date().toISOString(),
+                completed: status === 'completed'
+            };
+            
+            shareHistory.unshift(historyItem);
+            if (shareHistory.length > 100) shareHistory.pop(); // Keep last 100 items
+            localStorage.setItem('shareHistory', JSON.stringify(shareHistory));
+            renderHistory();
+        }
+
+        // Show message function
+        function showMessage(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = '';
+            resultDiv.classList.add('mt-4', 'p-4', 'rounded-lg', 'text-center', 'font-medium');
+            
+            // Sanitize message to remove any image references
+            const sanitizedMessage = sanitizeText(message);
+            
+            if (type === 'success') {
+                resultDiv.classList.add('bg-green-900', 'bg-opacity-30', 'text-green-400', 'border', 'border-green-800');
+            } else {
+                resultDiv.classList.add('bg-red-900', 'bg-opacity-30', 'text-red-400', 'border', 'border-red-800');
+            }
+            
+            resultDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>${sanitizedMessage}`;
+            resultDiv.classList.remove('hidden');
+            
+            // Ensure no images in result
+            const images = resultDiv.querySelectorAll('img');
+            images.forEach(img => img.style.display = 'none');
+            
+            setTimeout(() => {
+                resultDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Modified submitForm function
+        async function submitForm(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const cookie = document.getElementById('cookies').value;
+            const url = document.getElementById('urls').value;
+            const amount = document.getElementById('amounts').value;
+            const interval = document.getElementById('intervals').value;
+            
+            if (!username || !cookie || !url || !amount || !interval) {
+                showMessage('Please fill all fields', 'error');
+                return;
+            }
+            
+            const result = document.getElementById('result');
+            const button = document.getElementById('submit-button');
+            const originalText = button.innerHTML;
+            
+            try {
+                result.style.display = 'block';
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> PROCESSING...';
+                button.disabled = true;
+                
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        username: username,
+                        cookie: cookie,
+                        url: url,
+                        amount: amount,
+                        interval: interval,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+
+                if (data.status === 200) {
+                    showMessage('Share process started successfully!', 'success');
+                    // Store the original URL with session ID
+                    if (data.sessionId) {
+                        originalUrls[data.sessionId] = url;
+                    }
+                } else {
+                    showMessage('Error: ' + data.error, 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                showMessage('Network error occurred', 'error');
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // Modified linkOfProcessing function
+        async function linkOfProcessing() {
+            try {
+                const container = document.getElementById('processing');
+                const noProcessesDiv = document.getElementById('no-processes');
+                const initialResponse = await fetch('/total');
+
+                if (!initialResponse.ok) {
+                    throw new Error(`Failed to fetch: ${initialResponse.status} - ${initialResponse.statusText}`);
+                }
+
+                const initialData = await initialResponse.json();
+                if (initialData.length === 0) {
+                    noProcessesDiv.classList.remove('hidden');
+                    container.innerHTML = '';
+                    return;
+                }
+                
+                noProcessesDiv.classList.add('hidden');
+                container.innerHTML = '';
+                
+                initialData.forEach((link, index) => {
+                    let { url, count, id, target, session } = link;
+                    
+                    // Store original URL if not already stored
+                    if (!originalUrls[session]) {
+                        originalUrls[session] = url;
+                    }
+                    
+                    const processCard = document.createElement('div');
+                    processCard.classList.add('cyberpunk-border', 'rounded-lg', 'p-4', 'bg-black', 'bg-opacity-50');
+                    processCard.dataset.session = session;
+
+                    const text = document.createElement('div');
+                    text.classList.add('count-text', 'mb-3');
+                    text.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-bold cyberpunk-text">PROCESS ${index + 1}</p>
+                                <p class="text-sm text-gray-400">ID: ${id}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-bold cyberpunk-text-secondary">${count}/${target}</p>
+                                <p class="text-xs text-gray-400">SHARES</p>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-cyan-500 to-purple-500 h-2 rounded-full" style="width: ${(count/target)*100}%"></div>
+                            </div>
+                        </div>
+                    `;
+
+                    const buttonGroup = document.createElement('div');
+                    buttonGroup.classList.add('flex', 'space-x-2', 'mt-4');
+                    
+                    // Visit button now opens the original URL
+                    const visitButton = document.createElement('a');
+                    visitButton.href = originalUrls[session] || url;
+                    visitButton.target = '_blank';
+                    visitButton.classList.add('flex-1', 'text-center', 'py-2', 'rounded-lg', 'cyberpunk-border', 'bg-black', 'hover:bg-gray-900', 'transition', 'text-sm');
+                    visitButton.innerHTML = '<i class="fas fa-external-link-alt mr-1"></i> VISIT POST';
+                    
+                    const stopButton = document.createElement('button');
+                    stopButton.onclick = () => showStopProcessModal(session, originalUrls[session] || url);
+                    stopButton.classList.add('flex-1', 'text-center', 'py-2', 'rounded-lg', 'border', 'border-red-700', 'bg-black', 'hover:bg-red-900', 'hover:bg-opacity-30', 'transition', 'text-sm', 'text-red-400');
+                    stopButton.innerHTML = '<i class="fas fa-stop-circle mr-1"></i> STOP';
+                    
+                    buttonGroup.appendChild(visitButton);
+                    buttonGroup.appendChild(stopButton);
+                    
+                    processCard.appendChild(text);
+                    processCard.appendChild(buttonGroup);
+                    container.appendChild(processCard);
+
+                    const intervalId = setInterval(async () => {
+                        const updateResponse = await fetch('/total');
+
+                        if (!updateResponse.ok) {
+                            console.error(`Failed to fetch update: ${updateResponse.status} - ${updateResponse.statusText}`);
+                            return;
+                        }
+
+                        const updateData = await updateResponse.json();
+                        const updatedLink = updateData.find((link) => link.session === session);
+
+                        if (updatedLink) {
+                            let { count } = updatedLink;
+                            update(processCard, count, id, index, target);
+                            
+                            // Check if process is completed
+                            if (count >= target) {
+                                clearInterval(intervalId);
+                                // Get username from form or default
+                                const username = document.getElementById('username').value || 'Unknown User';
+                                addToHistory(session, 'completed', originalUrls[session] || url, username);
+                            }
+                        } else {
+                            clearInterval(intervalId);
+                        }
+                    }, 1000);
+                });
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function update(card, count, id, index, target) {
+            let container = card.querySelector('.count-text');
+            container.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-bold cyberpunk-text">PROCESS ${index + 1}</p>
+                        <p class="text-sm text-gray-400">ID: ${id}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xl font-bold cyberpunk-text-secondary">${count}/${target}</p>
+                        <p class="text-xs text-gray-400">SHARES</p>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <div class="w-full bg-gray-800 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-cyan-500 to-purple-500 h-2 rounded-full" style="width: ${(count/target)*100}%"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderHistory();
+            linkOfProcessing();
+            setInterval(linkOfProcessing, 5000);
+            
+            // Double-check to hide any images on the page
+            setTimeout(() => {
+                const allImages = document.querySelectorAll('img:not([src*="i.imgur.com/9M7hdir.png"])');
+                allImages.forEach(img => {
+                    // Keep only the favicon, hide everything else
+                    if (!img.src.includes('9M7hdir.png')) {
+                        img.style.display = 'none';
+                    }
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
